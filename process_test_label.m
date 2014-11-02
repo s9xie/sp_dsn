@@ -11,54 +11,33 @@ keySet2 = {'cow','bird','grass','sheep','chair','cat','car','body','water',...
 valueSet2 = [1:21];
 reverseLabelMap = containers.Map(keySet2,valueSet2);
 
-parfor i = 1:size(test_files,1)
+for i = 1:size(test_files,1)
     fprintf('processing image %d of %d',i, size(test_files,1))
     tic
     GT_im = imread(strcat('GroundTruth/', test_files{i}(1:end-4), '_GT.bmp'));
-     
-    %Write a image size label map
-    use the patch file name as index to query the exact label during training
-	    
-
-    [IND,map] = rgb2ind(GT_im,23);
-    map = map*255;
-    for id = 2:size(map,1) % 1 is always blank
-        label_string = sprintf(('%d %d %d'), map(id,1), map(id,2), map(id,3));
-        if strcmp(label_string, '0 0 0') || strcmp(label_string, '64 0 0') || strcmp(label_string, '128 0 128')
-            continue;
-        end %ignore the mountain and horse patches
-        numPatches = per_image_per_label(reverseLabelMap(labelMap(label_string)));
-        [I,J] = ind2sub(size(IND),find(IND == (id-1)));
-        patchIdx = randperm(size(I,1));
-        
-        if(size(I,1) < numPatches)
-           numPatches = size(I,1);
-        end
-        
-        patchIdx = patchIdx(1:numPatches);
-        
-        patchFolderName = ['Patches/', labelMap(label_string), '/'];
-            if ~exist(patchFolderName, 'dir')
-                mkdir(patchFolderName);
+    im_size1 = size(GT_im, 1);
+    im_size2 = size(GT_im, 2);
+    
+    label_map = uint8(zeros(im_size1, im_size2));
+    
+    for ii = 1:im_size1,
+        for jj = 1:im_size2,
+            label_string = sprintf(('%d %d %d'), GT_im(ii,jj,1), GT_im(ii,jj,2), GT_im(ii,jj,3));
+            if strcmp(label_string, '0 0 0') || strcmp(label_string, '64 0 0') || strcmp(label_string, '128 0 128')
+                continue;
             end
-            
-        contextFolderName = ['Context/', labelMap(label_string), '/'];
-            if ~exist(contextFolderName, 'dir')
-                mkdir(contextFolderName);
-            end
-        
-        for np = 1: numPatches,
-            patchImg = extract_patch(im, I(patchIdx(np)), J(patchIdx(np)));
-            contextImg = extract_context(GT_im, I(patchIdx(np)), J(patchIdx(np)), labelMap, reverseLabelMap);
-            
-            patchName = [patchFolderName, test_files{i}(1:end-4), '_', labelMap(label_string), '_' ,int2str(np), '.bmp'];
-            contextName = [contextFolderName, test_files{i}(1:end-4), '_', labelMap(label_string), '_' ,int2str(np), '.bmp'];
-
-            imwrite(patchImg, patchName, 'BMP');
-            imwrite(contextImg, contextName, 'BMP');
+            label_map = reverseLabelMap(labelMap(label_string));
         end
-        time = toc;
-        fprintf('processing time: %f\n', time);
-    end    
+    end
+    
+    testLabelFolderName = ['TestLabelMaps/'];
+        if ~exist(testLabelFolderName, 'dir')
+            mkdir(testLabelFolderName);
+        end
+            
+    save([testLabelFolderName, test_files{i}(1:end-4), '.mat'], 'label_map');    
+    
+    time = toc;
+    fprintf('processing time: %f\n', time);    
 end
 
