@@ -16,7 +16,7 @@ function patch_img = extract_context(test_img, y, x, labelMap, reverseLabelMap)
 
     patch_img = uint8(zeros(65,65));
 
-    for i = 1:65,
+    parfor i = 1:65,
         for j = 1:65,
             yy = Y(i,j);
             xx = X(i,j);
