@@ -1,20 +1,20 @@
-keySet = {'64 0 0', '0 0 0','0 0 128','0 64 0','0 128 0','0 128 128','0 192 0',...
+keySet = {'0 0 0','64 0 0','0 0 128','0 64 0','0 128 0','0 128 128','0 192 0',...
     '0 192 128','64 0 128','64 64 0','64 128 0','64 128 128','128 0 0','128 64 0',...
     '128 64 128','128 128 0','128 128 128','128 192 128','192 0 0',...
     '192 0 128','192 64 0','192 128 0','192 128 128'};
-valueSet = {'mountain','void','cow','bird','grass','sheep','chair','cat','car','body','water',...
+valueSet = {'void','mountain','cow','bird','grass','sheep','chair','cat','car','body','water',...
     'flower','bldg','book','road','tree','sky','dog','airplane','bicycle','boat','face','sign'};
 labelMap = containers.Map(keySet,valueSet);
 
-keySet2 = {'total','mountain','void','cow','bird','grass','sheep','chair','cat','car','body','water',...
+keySet2 = {'total','void','mountain','cow','bird','grass','sheep','chair','cat','car','body','water',...
     'flower','bldg','book','road','tree','sky','dog','airplane','bicycle','boat','face','sign'};
 valueSet2 = zeros(1,24);
 labelCountMap = containers.Map(keySet2,valueSet2);
 
-keySet3 = {'mountain', 'void','cow','bird','grass','sheep','chair','cat','car','body','water',...
+keySet4 = {'void','mountain','cow','bird','grass','sheep','chair','cat','car','body','water',...
     'flower','bldg','book','road','tree','sky','dog','airplane','bicycle','boat','face','sign'};
-valueSet3 = zeros(1,23);
-labelCountImageMap = containers.Map(keySet3,valueSet3);
+valueSet4 = zeros(1,23);
+labelCountImageMap = containers.Map(keySet4,valueSet4);
 
 load('file_list.mat')
 
@@ -47,8 +47,10 @@ for i = 2:24,
 end
 
 for i = 1:23,
-    image_count(i) = labelCountImageMap(keySet3{i});
-    fprintf('%s: %d\n', keySet3{i}, labelCountImageMap(keySet3{i}));
+    image_count(i) = labelCountImageMap(keySet4{i});
+    fprintf('%s: %d\n', keySet4{i}, labelCountImageMap(keySet4{i}));
 end
 
 per_image_per_label = ceil(label_count ./ image_count);
+
+per_image_per_label(1) = 350; % sample fewer void classes

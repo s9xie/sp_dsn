@@ -30,17 +30,12 @@ patch_img = uint8(zeros(65,65,3));
 
 for i = 1:65,
     for j = 1:65,
-        yy = Y(i,j);
-        xx = X(i,j);
-        if yy >= 1 && xx >= 1 && yy <= image_size(1) && xx <= image_size(2)
-            patch_img(i,j,1) = test_img(yy, xx, 1);
-            patch_img(i,j,2) = test_img(yy, xx, 2);
-            patch_img(i,j,3) = test_img(yy, xx, 3);
+        if Y(i,j) >= 1 && X(i,j) >= 1 && Y(i,j) <= image_size(1) && X(i,j) <= image_size(2)
+            patch_img(i,j,1) = test_img(Y(i,j), X(i,j), 1);
+            patch_img(i,j,2) = test_img(Y(i,j), X(i,j), 2);
+            patch_img(i,j,3) = test_img(Y(i,j), X(i,j), 3);
         end
     end
 end
-
-
-%imshow(patch_img,[0,255]);
 
 

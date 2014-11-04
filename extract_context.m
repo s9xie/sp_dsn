@@ -1,4 +1,4 @@
-function patch_img = extract_context(test_img, y, x, labelMap, reverseLabelMap)
+function patch_img = extract_context(test_img, y, x, AllLabelMap)
     
     image_size = size(test_img);
     img_s1 = image_size(1);
@@ -16,15 +16,11 @@ function patch_img = extract_context(test_img, y, x, labelMap, reverseLabelMap)
 
     patch_img = uint8(zeros(65,65));
 
-    parfor i = 1:65,
+    for i = 1:65,
         for j = 1:65,
-            yy = Y(i,j);
-            xx = X(i,j);
-            if yy >= 1 && xx >= 1 && yy <= img_s1 && xx <= img_s2
-                label_string = sprintf(('%d %d %d'), test_img(yy, xx, 1), test_img(yy, xx, 2), test_img(yy, xx, 3));
-                if ~strcmp(label_string, '0 0 0') && ~strcmp(label_string, '64 0 0') && ~strcmp(label_string, '128 0 128'),    
-                    patch_img(i,j) = reverseLabelMap(labelMap(label_string));
-                end
+            if Y(i,j) >= 1 && X(i,j) >= 1 && Y(i,j) <= img_s1 && X(i,j) <= img_s2
+                patch_img(i,j) = AllLabelMap(sprintf(('%d %d %d'), test_img(Y(i,j), X(i,j), 1), ...
+                    test_img(Y(i,j), X(i,j), 2), test_img(Y(i,j), X(i,j), 3)));
             end
         end
     end
