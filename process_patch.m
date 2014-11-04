@@ -26,9 +26,11 @@ for i = 1:size(train_files,1)
     
     [IND,map] = rgb2ind(GT_im,23);
     map = map*255;
-    for id = 1:size(map,1) % 1 is always void
+    for id = 2:size(map,1) % 1 is always void
         label_string = sprintf(('%d %d %d'), map(id,1), map(id,2), map(id,3));
-        %if strcmp(label_string, '128 0 128')
+        if strcmp(label_string, '0 0 0')
+            disp('ERROR, why 000 here?');
+        end
         %    label_string = '0 0 0';
         %end %ignore the \del(mountain) and horse patches
         
@@ -62,8 +64,8 @@ for i = 1:size(train_files,1)
             imwrite(patchImg, patchName, 'JPG');
             save(contextName, 'context');
         end
-        time = toc;
-        fprintf('processing time: %f\n', time);
     end    
+    time = toc;
+    fprintf('processing time: %f\n', time);
 end
 

@@ -53,4 +53,4 @@ end
 
 per_image_per_label = ceil(label_count ./ image_count);
 
-per_image_per_label(1) = 350; % sample fewer void classes
+per_image_per_label(1) = 0; % sample fewer void classes
